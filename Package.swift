@@ -15,7 +15,6 @@ let package = Package(
   dependencies: [
     // ----- OTHER -----
     .package(url: "https://github.com/pointfreeco/swift-identified-collections", from: "1.0.0"),
-    .package(url: "https://github.com/apple/swift-syntax.git", from: "509.0.0"),
   ],
   
   // --------------- Modules ---------------
@@ -23,7 +22,7 @@ let package = Package(
     // SettingsModel
     .target(name: "SettingsModel", dependencies: [
       .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
-      .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+      "SharedModel",
     ]),
 
     // SharedModel
