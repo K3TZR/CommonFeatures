@@ -416,3 +416,14 @@ public struct SignalLevel {
     String(format: "%3.2f", rms) + ", " + String(format: "%3.2f", peak)
   }
 }
+
+public enum MessageFilter: String, CaseIterable {
+  case all
+  case prefix
+  case includes
+  case excludes
+  case command
+  case status
+  case reply
+  case S0
+}

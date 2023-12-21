@@ -127,6 +127,17 @@ public class SettingsModel {
   public var spectrumGradientStop2: Double = 0.5
   public var spectrumGradientStop3: Double = 0.6
   
+  // --------- SDRApi Settings ----------
+  public var clearOnSend: Bool
+  public var clearOnStart: Bool
+  public var clearOnStop: Bool
+  public var fontSize: Double
+  public var gotoLast: Bool
+  public var messageFilter: MessageFilter
+  public var messageFilterText = ""
+  public var showPings: Bool
+  public var showTimes: Bool
+
   // ----------------------------------------------------------------------------
   // MARK: - Static properties
 
@@ -238,6 +249,17 @@ public class SettingsModel {
       daxRxSetting = DaxSetting(channel: 1)
       daxTxSetting = DaxSetting(channel: 1)
 
+      // --------- SDRApi Settings ----------
+      clearOnSend = false
+      clearOnStart = false
+      clearOnStop = false
+      fontSize = 12
+      gotoLast = true
+      messageFilter = .all
+      messageFilterText = ""
+      showPings = false
+      showTimes = false
+
       guiClientId = UUID()
       
       altAntennaNames = [AntennaName]()
@@ -340,6 +362,16 @@ public class SettingsModel {
       daxRxSetting = SettingsModel.getStructFromSettings("daxRxSetting", defaults: FlexDefaults) ?? DaxSetting(channel: 1) as DaxSetting
       daxTxSetting = SettingsModel.getStructFromSettings("daxTxSetting", defaults: FlexDefaults) ?? DaxSetting(channel: 1) as DaxSetting
 
+      // --------- SDRApi Settings ----------
+      clearOnSend = FlexDefaults.bool(forKey: "clearOnSend")
+      clearOnStart = FlexDefaults.bool(forKey: "clearOnStart")
+      clearOnStop = FlexDefaults.bool(forKey: "clearOnStop")
+      fontSize = FlexDefaults.double(forKey: "fontSize")
+      gotoLast = FlexDefaults.bool(forKey: "gotoLast")
+      messageFilter = MessageFilter(rawValue: FlexDefaults.string(forKey: "messageFilter") ?? MessageFilter.all.rawValue)!
+      messageFilterText = FlexDefaults.string(forKey: "logViewerFilterText") ?? ""
+      showPings = FlexDefaults.bool(forKey: "showPings")
+      showTimes = FlexDefaults.bool(forKey: "showTimes")
 
       guiClientId = UUID(uuidString: FlexDefaults.string(forKey: "guiClientId") ?? "")
       
@@ -452,7 +484,17 @@ extension SettingsModel {
     SettingsModel.saveStructToSettings("daxRxSetting", daxRxSetting, defaults: FlexDefaults)
     SettingsModel.saveStructToSettings("daxTxSetting", daxTxSetting, defaults: FlexDefaults)
 
-    
+    // --------- SDRApi Settings ----------
+    FlexDefaults.set(clearOnSend, forKey: "clearOnSend")
+    FlexDefaults.set(clearOnStart, forKey: "clearOnStart")
+    FlexDefaults.set(clearOnStop, forKey: "clearOnStop")
+    FlexDefaults.set(fontSize, forKey: "fontSize")
+    FlexDefaults.set(gotoLast, forKey: "gotoLast")
+    FlexDefaults.set(messageFilter.rawValue, forKey: "messageFilter")
+    FlexDefaults.set(messageFilterText, forKey: "messageFilterText")
+    FlexDefaults.set(showPings, forKey: "showPings")
+    FlexDefaults.set(showTimes, forKey: "showTimes")
+
     FlexDefaults.set(guiClientId?.uuidString, forKey: "guiClientId")
     
     FlexDefaults.set(altAntennaNames, forKey: "altAntennaNames")
