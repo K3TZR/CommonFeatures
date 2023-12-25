@@ -135,6 +135,7 @@ public class SettingsModel {
   public var gotoLast: Bool
   public var messageFilter: MessageFilter
   public var messageFilterText = ""
+  public var objectFilter: ObjectFilter
   public var showPings: Bool
   public var showTimes: Bool
 
@@ -257,6 +258,7 @@ public class SettingsModel {
       gotoLast = true
       messageFilter = .all
       messageFilterText = ""
+      objectFilter = .core
       showPings = false
       showTimes = false
 
@@ -370,6 +372,7 @@ public class SettingsModel {
       gotoLast = FlexDefaults.bool(forKey: "gotoLast")
       messageFilter = MessageFilter(rawValue: FlexDefaults.string(forKey: "messageFilter") ?? MessageFilter.all.rawValue)!
       messageFilterText = FlexDefaults.string(forKey: "logViewerFilterText") ?? ""
+      objectFilter = ObjectFilter(rawValue: FlexDefaults.string(forKey: "objectFilter") ?? ObjectFilter.core.rawValue)!
       showPings = FlexDefaults.bool(forKey: "showPings")
       showTimes = FlexDefaults.bool(forKey: "showTimes")
 
@@ -492,6 +495,7 @@ extension SettingsModel {
     FlexDefaults.set(gotoLast, forKey: "gotoLast")
     FlexDefaults.set(messageFilter.rawValue, forKey: "messageFilter")
     FlexDefaults.set(messageFilterText, forKey: "messageFilterText")
+    FlexDefaults.set(objectFilter.rawValue, forKey: "objectFilter")
     FlexDefaults.set(showPings, forKey: "showPings")
     FlexDefaults.set(showTimes, forKey: "showTimes")
 
@@ -553,8 +557,6 @@ extension SettingsModel {
       let decoder = JSONDecoder()
       if let value = try? decoder.decode(T.self, from: data) {
         return value
-      } else {
-        return nil
       }
     }
     return nil
@@ -714,13 +716,23 @@ extension SettingsModel {
     
     public init
     (
-      _ serial: String, _ source: String, _ station: String?
+      _ station: Station
     )
     {
-      self.serial = serial
-      self.source = source
-      self.station = station
+      self.serial = station.packet.serial
+      self.source = station.packet.source.rawValue
+      self.station = station.station
     }
+    public init
+    (
+      _ packet: Packet
+    )
+    {
+      self.serial = packet.serial
+      self.source = packet.source.rawValue
+      self.station = ""
+    }
+
   }
   
   public struct SidePanelOptions: OptionSet {

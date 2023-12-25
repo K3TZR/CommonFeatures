@@ -24,7 +24,8 @@ public enum PacketAction: String {
   case updated
 }
 
-public struct PacketEvent: Equatable {
+public struct PacketEvent {
+//public struct PacketEvent: Equatable {
   public var action: PacketAction
   public var packet: Packet
   
@@ -34,38 +35,87 @@ public struct PacketEvent: Equatable {
   }
 }
 
-public struct Pickable: Identifiable, Equatable {
-  public var id: UUID
-  public var packetId: String     // ID from packets
-  public var name: String
-  public var source: String
-  public var status: String
-  public var station: String
-  public var isDefault: Bool
+//public struct Pickable: Identifiable, Equatable {
+//  public var id: UUID
+//  public var packetId: String     // ID from packets
+//  public var name: String
+//  public var source: String
+//  public var status: String
+//  public var station: String
+//  public var isDefault: Bool
+//  
+//  public init(
+//    packetId: String,
+//    name: String,
+//    source: String,
+//    status: String,
+//    station: String,
+//    isDefault: Bool
+//  )
+//  {
+//    self.id = UUID()
+//    self.packetId = packetId
+//    self.name = name
+//    self.source = source
+//    self.status = status
+//    self.station = station
+//    self.isDefault = isDefault
+//  }
+//}
+
+@Observable
+final public class Station: Identifiable, Equatable, Hashable {
+//public struct Station: Identifiable, Equatable, Hashable {
+  
+  public func hash(into hasher: inout Hasher) {
+    hasher.combine(packet.serial)
+    hasher.combine(packet.source)
+    hasher.combine(station)
+  }
+
+  public static func ==(lhs: Station, rhs: Station) -> Bool {
+    lhs === rhs
+  }
+
+//  public static func ==(lhs: Station, rhs: Station) -> Bool {
+//    // same Serial Number, Public IP and Station
+//    guard lhs.packet.serial == rhs.packet.serial && lhs.packet.publicIp == rhs.packet.publicIp && lhs.station == rhs.station else { return false }
+//    guard lhs.packet.guiClients == rhs.packet.guiClients else { return false }
+//    guard lhs.packet.status == rhs.packet.status else { return false }
+//    guard lhs.packet.port == rhs.packet.port else { return false }
+//    guard lhs.packet.inUseHost == rhs.packet.inUseHost else { return false }
+//    guard lhs.packet.inUseIp == rhs.packet.inUseIp else { return false }
+//    guard lhs.packet.publicIp == rhs.packet.publicIp else { return false }
+//    guard lhs.packet.publicTlsPort == rhs.packet.publicTlsPort else { return false }
+//    guard lhs.packet.publicUdpPort == rhs.packet.publicUdpPort else { return false }
+//    guard lhs.packet.publicUpnpTlsPort == rhs.packet.publicUpnpTlsPort else { return false }
+//    guard lhs.packet.publicUpnpUdpPort == rhs.packet.publicUpnpUdpPort else { return false }
+//    guard lhs.packet.callsign == rhs.packet.callsign else { return false }
+//    guard lhs.packet.model == rhs.packet.model else { return false }
+//    guard lhs.packet.nickname == rhs.packet.nickname else { return false }
+//    return true
+//  }
   
   public init(
-    packetId: String,
-    name: String,
-    source: String,
-    status: String,
-    station: String,
-    isDefault: Bool
-  )
+    packet: Packet,
+    station: String = ""
+  ) 
   {
-    self.id = UUID()
-    self.packetId = packetId
-    self.name = name
-    self.source = source
-    self.status = status
+    self.packet = packet
     self.station = station
-    self.isDefault = isDefault
   }
+  
+  public var id: String { packet.serial + packet.publicIp + station }
+  public var packet: Packet
+  public var station: String
 }
 
 // ----------------------------------------------------------------------------
 // MARK: - Packet struct
 
-public struct Packet: Identifiable, Equatable, Hashable {
+@Observable
+final public class Packet: Identifiable, Equatable, Hashable {
+//public struct Packet: Identifiable, Equatable, Hashable {
   
   public func hash(into hasher: inout Hasher) {
     hasher.combine(serial)
@@ -73,23 +123,26 @@ public struct Packet: Identifiable, Equatable, Hashable {
   }
   
   public static func ==(lhs: Packet, rhs: Packet) -> Bool {
-    // same Serial Number and Public IP
-    guard lhs.serial == rhs.serial && lhs.publicIp == rhs.publicIp else { return false }
-    guard lhs.guiClients == rhs.guiClients else { return false }
-    guard lhs.status == rhs.status else { return false }
-    guard lhs.port == rhs.port else { return false }
-    guard lhs.inUseHost == rhs.inUseHost else { return false }
-    guard lhs.inUseIp == rhs.inUseIp else { return false }
-    guard lhs.publicIp == rhs.publicIp else { return false }
-    guard lhs.publicTlsPort == rhs.publicTlsPort else { return false }
-    guard lhs.publicUdpPort == rhs.publicUdpPort else { return false }
-    guard lhs.publicUpnpTlsPort == rhs.publicUpnpTlsPort else { return false }
-    guard lhs.publicUpnpUdpPort == rhs.publicUpnpUdpPort else { return false }
-    guard lhs.callsign == rhs.callsign else { return false }
-    guard lhs.model == rhs.model else { return false }
-    guard lhs.nickname == rhs.nickname else { return false }
-    return true
+    lhs === rhs
   }
+//  public static func ==(lhs: Packet, rhs: Packet) -> Bool {
+//    // same Serial Number and Public IP
+//    guard lhs.serial == rhs.serial && lhs.publicIp == rhs.publicIp else { return false }
+//    guard lhs.guiClients == rhs.guiClients else { return false }
+//    guard lhs.status == rhs.status else { return false }
+//    guard lhs.port == rhs.port else { return false }
+//    guard lhs.inUseHost == rhs.inUseHost else { return false }
+//    guard lhs.inUseIp == rhs.inUseIp else { return false }
+//    guard lhs.publicIp == rhs.publicIp else { return false }
+//    guard lhs.publicTlsPort == rhs.publicTlsPort else { return false }
+//    guard lhs.publicUdpPort == rhs.publicUdpPort else { return false }
+//    guard lhs.publicUpnpTlsPort == rhs.publicUpnpTlsPort else { return false }
+//    guard lhs.publicUpnpUdpPort == rhs.publicUpnpUdpPort else { return false }
+//    guard lhs.callsign == rhs.callsign else { return false }
+//    guard lhs.model == rhs.model else { return false }
+//    guard lhs.nickname == rhs.nickname else { return false }
+//    return true
+//  }
   
   public init(source: PacketSource = .local,
               nickname: String = "",
@@ -104,7 +157,7 @@ public struct Packet: Identifiable, Equatable, Hashable {
     self.publicIp = publicIp
     self.status = status
   }
-  
+ 
   // ----------------------------------------------------------------------------
   // MARK: - Public properties
   
@@ -126,6 +179,7 @@ public struct Packet: Identifiable, Equatable, Hashable {
   // these fields in the received packet ARE COPIED to the Packet struct
   public var callsign = ""                          //  X     X
   public var guiClientHosts = ""                    //  X     X
+  public var guiClientStations = ""                 //  X     X
   public var inUseHost = ""                         //  X     X
   public var inUseIp = ""                           //  X     X
   public var model = ""                             //  X     X
@@ -209,11 +263,11 @@ public struct Packet: Identifiable, Equatable, Hashable {
   public static func populate(_ properties: KeyValuesArray) -> Packet {
     var guiClientHandles = ""
     var guiClientPrograms = ""
-    var guiClientStations = ""
+//    var guiClientStations = ""
     var guiClientIps = ""
 
     // create a minimal packet with now as "lastSeen"
-    var packet = Packet()
+    let packet = Packet()
     
     // process each key/value pair, <key=value>
     for property in properties {
@@ -234,7 +288,7 @@ public struct Packet: Identifiable, Equatable, Hashable {
       case .guiClientHosts:             packet.guiClientHosts = property.value.replacingOccurrences(of: "\u{7F}", with: "")
       case .guiClientIps:               guiClientIps = property.value.replacingOccurrences(of: "\u{7F}", with: "")
       case .guiClientPrograms:          guiClientPrograms = property.value.replacingOccurrences(of: "\u{7F}", with: "")
-      case .guiClientStations:          guiClientStations = property.value.replacingOccurrences(of: "\u{7F}", with: "")
+      case .guiClientStations:          packet.guiClientStations = property.value.replacingOccurrences(of: "\u{7F}", with: "")
       case .inUseHost, .inUseHostWan:   packet.inUseHost = property.value
       case .inUseIp, .inUseIpWan:       packet.inUseIp = property.value
       case .model:                      packet.model = property.value
@@ -269,10 +323,10 @@ public struct Packet: Identifiable, Equatable, Hashable {
       }
     }
     
-    if guiClientPrograms != "" && guiClientStations != "" && guiClientHandles != "" {
+    if guiClientPrograms != "" && packet.guiClientStations != "" && guiClientHandles != "" {
       
       let programs  = guiClientPrograms.components(separatedBy: ",")
-      let stations  = guiClientStations.components(separatedBy: ",")
+      let stations  = packet.guiClientStations.components(separatedBy: ",")
       let handles   = guiClientHandles.components(separatedBy: ",")
       let ips       = guiClientIps.components(separatedBy: ",")
       

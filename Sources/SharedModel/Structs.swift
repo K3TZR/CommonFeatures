@@ -427,3 +427,23 @@ public enum MessageFilter: String, CaseIterable {
   case reply
   case S0
 }
+
+public enum ObjectFilter: String, CaseIterable {
+  case core
+  case coreNoMeters = "core w/o meters"
+  case amplifiers
+  case bandSettings = "band settings"
+  case cwx
+  case equalizers
+  case interlock
+  case memories
+  case meters
+  case misc
+  case network
+  case profiles
+  case streams
+  case usbCable
+  case wan
+  case waveforms
+  case xvtrs
+}

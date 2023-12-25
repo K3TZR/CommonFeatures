@@ -13,7 +13,8 @@ public enum ClientEventAction: String {
   case removed
   case completed
 }
-public struct ClientEvent: Equatable {
+public struct ClientEvent {
+//public struct ClientEvent: Equatable {
   
   public init(_ action: ClientEventAction, client: GuiClient) {
     self.action = action
@@ -23,7 +24,9 @@ public struct ClientEvent: Equatable {
   public var client: GuiClient
 }
 
-public struct GuiClient: Equatable, Identifiable {
+@Observable
+final public class GuiClient: Identifiable {
+//public struct GuiClient: Equatable, Identifiable {
 
   public init(handle: UInt32, station: String = "", program: String = "",
               clientId: String? = nil, host: String? = nil, ip: String? = nil,
